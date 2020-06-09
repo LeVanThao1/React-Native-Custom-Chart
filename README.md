@@ -3,13 +3,13 @@
 yarn install
 ``` 
 
-### android
+### Android
 
 ```sh
 react-native run-android
 ```
 
-### ios
+### iOS
 
 ```sh
 cd ios
