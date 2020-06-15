@@ -23,7 +23,8 @@ import {
   DebugInstructions,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-import LineChartScreen from './src/LineChartScreen';
+import LineChartScreen from './components/LineChartScreen';
+import VictoryChartScatter from './components/VictoryChartScatter';
 
 const App: () => React$Node = () => {
   return (
@@ -31,7 +32,9 @@ const App: () => React$Node = () => {
       <StatusBar barStyle="dark-content" />
       <SafeAreaView style={styles.container}>
         {/* <Text>Hello</Text> */}
-        <LineChartScreen />
+        {/* <LineChartScreen /> */}
+        <VictoryChartScatter/>
+        {/* <ReChart/> */}
       </SafeAreaView>
     </>
   );
