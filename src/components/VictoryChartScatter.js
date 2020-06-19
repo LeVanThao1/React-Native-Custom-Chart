@@ -1,13 +1,7 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { StyleSheet, View } from "react-native";
-import { VictoryScatter, VictoryChart, VictoryTheme, VictoryAxis } from "victory-native";
-
-const data = [
-  { quarter: 1, earnings: 13000 },
-  { quarter: 2, earnings: 16500 },
-  { quarter: 3, earnings: 14250 },
-  { quarter: 4, earnings: 19000 }
-];
+import { VictoryScatter, VictoryChart, VictoryTheme, VictoryAxis, VictoryZoomContainer } from "victory-native";
+import VicChart from "./VicChart";
 
 const createTickValues = (min, max, space) => {
     let result = [];
@@ -17,47 +11,108 @@ const createTickValues = (min, max, space) => {
     return result;
 }
 
-const VictoryChartScatter = () => {
-    return (
-      <View style={styles.container}>
-        <VictoryChart
-            theme={VictoryTheme.material}
-            
-            domain={{ x: [0, 7.8], y: [-16, 16] }}
-        >
-            <VictoryAxis 
-                dependentAxis
-                tickValues={createTickValues(-16, 16, 4)}
-                label="Lít/giây"
-            />
-            <VictoryAxis 
-                offsetY={50}
-                tickValues={createTickValues(0, 7.8, 0.6)}
-                label="Lít"
-                // offsetX={}
-            />
-            <VictoryScatter
-                style={{ data: { fill: "#c43a31" } }}
-                size={4}
-                data={[
-                    { x: 1, y: 2 },
-                    { x: 2, y: 3 },
-                    { x: 3, y: 5 },
-                    { x: 4, y: 4 },
-                    { x: 5, y: 7 }
-                ]}
-            />
-        </VictoryChart>
-      </View>
-    );
-  }
+const VictoryChartScatter = ({data, numberRan}) => {
+  // console.log('client',data[numberRan], numberRan)
+  return (
+    <View style={styles.container}>
+      <VictoryChart
+      // style={styles.chart}
+          domain={{ x: [0, 7.8], y: [-16, 16] }}
+          theme={VictoryTheme.material}
+          containerComponent={<VictoryZoomContainer zoomDimension="x" zoomDomain={{x: [0, 7.8]}}/>}
+      >
+          <VictoryAxis 
+              dependentAxis
+              tickValues={createTickValues(-16, 16, 4)}
+              label="Lít/giây"
+              standalone={false}
+              orientation="left"
+              style={{
+                axisLabel: {padding: 30},
+              }}
+          />
+          <VictoryAxis 
+              offsetY={50}
+              tickValues={createTickValues(0, 7.8, 0.6)}
+              label="Lít"
+              standalone={false}
+              domainPadding={{y: 50}}
+              orientation="bottom"
+              style={{
+                axisLabel: {padding: 30},
+                grid: {stroke: 'transparent'}
+              }}
+          />
+          {
+            data.map(item => {
+              return (
+                <VictoryScatter key={item}
+                  style={{ data: { fill: item.color } }}
+                  size={2}
+                  data={item.data}
+              />
+              )
+            }) 
+          }
+          
+      </VictoryChart>
+      <VictoryChart
+          domain={{ x: [0, 14], y: [-3.2, 3.2] }}
+          theme={VictoryTheme.material}
+          containerComponent={<VictoryZoomContainer zoomDimension="x" zoomDomain={{x: [0, 14]}}/>}
+          style={styles.chart}
+      >
+          <VictoryAxis 
+              dependentAxis
+              tickValues={createTickValues(-3.2, 3.2, 0.8)}
+              label="Lít"
+              standalone={false}
+              orientation="left"
+              style={{
+                axisLabel: {padding: 30},
+              }}
+          />
+          <VictoryAxis 
+              offsetY={50}
+              tickValues={createTickValues(0, 14, 2)}
+              label="Giây"
+              standalone={false}
+              domainPadding={{y: 50}}
+              orientation="bottom"
+              style={{
+                axisLabel: {padding: 30},
+                grid: {stroke: 'transparent'}
+              }}
+          />
+          <VictoryScatter
+              style={{ data: { fill: "#c43a31" } }}
+              size={2}
+              data={[]}
+          />
+          
+      </VictoryChart>
+    </View>
+  );
+}
+// const datas = [
+//   { x: 0, y: 0 },
+//   { x: 0.2, y: 4 },
+//   { x: 0.4, y: 7.8 },
+//   { x: 0.6, y: 8 },
+//   { x: 0.8, y: 8 },
+
+// ]
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#f5fcff"
+    backgroundColor: "#f5fcff",
+    marginTop: -30
+  },
+  chart: {
+    marginTop: -30,
+    paddingTop: -30
+    
   }
 });
 
