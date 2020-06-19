@@ -11,7 +11,7 @@ const createTickValues = (min, max, space) => {
     return result;
 }
 
-const VictoryChartScatter = ({data, numberRan}) => {
+const VictoryChartScatter = ({data1, data2}) => {
   // console.log('client',data[numberRan], numberRan)
   return (
     <View style={styles.container}>
@@ -44,7 +44,7 @@ const VictoryChartScatter = ({data, numberRan}) => {
               }}
           />
           {
-            data.map(item => {
+            data2.map(item => {
               return (
                 <VictoryScatter key={item}
                   style={{ data: { fill: item.color } }}
@@ -84,11 +84,17 @@ const VictoryChartScatter = ({data, numberRan}) => {
                 grid: {stroke: 'transparent'}
               }}
           />
-          <VictoryScatter
-              style={{ data: { fill: "#c43a31" } }}
-              size={2}
-              data={[]}
-          />
+          {
+            data1.map(item => {
+              return (
+                <VictoryScatter key={item}
+                  style={{ data: { fill: item.color } }}
+                  size={2}
+                  data={item.data}
+              />
+              )
+            }) 
+          }
           
       </VictoryChart>
     </View>
