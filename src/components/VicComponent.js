@@ -51,14 +51,6 @@ const VicChartComponent = ({data, x, y, title}) => {
     </View>
   );
 }
-// const datas = [
-//   { x: 0, y: 0 },
-//   { x: 0.2, y: 4 },
-//   { x: 0.4, y: 7.8 },
-//   { x: 0.6, y: 8 },
-//   { x: 0.8, y: 8 },
-
-// ]
 
 const styles = StyleSheet.create({
   container: {

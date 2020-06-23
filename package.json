@@ -14,7 +14,9 @@
     "react": "16.11.0",
     "react-native": "0.62.2",
     "react-native-charts-wrapper": "^0.5.7",
+    "react-native-pathjs-charts": "0.0.34",
     "react-native-pure-chart": "^0.0.24",
+    "react-native-scatter-chart": "^1.0.9",
     "react-native-svg": "^12.1.0",
     "victory-native": "^34.3.0",
     "yarn": "^1.22.4"

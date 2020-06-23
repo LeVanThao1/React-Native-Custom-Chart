@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef, useImperativeHandle, useMemo, useCallback } from "react";
 import { StyleSheet, View, Button, Alert } from "react-native";
 import { VictoryScatter, VictoryChart, VictoryTheme, VictoryAxis, VictoryZoomContainer } from "victory-native";
-import VicChart from "./VicChart";
+import Y from "./Y";
+import X from './X'
+// import VicChart from "./VicChart";
 
 const createTickValues = (min, max, space) => {
     let result = [];
@@ -14,9 +16,7 @@ const colors = ['red', 'blue', 'gray'];
 const VictoryChartScatter = () => {
   const intervalRef = useRef(null);
   const numberRan = useRef(0);
-  // const refChilden = useRef()
   const [isRun,setRun] = useState(false);
-  // const [color, setColor] = useState(0);
   const numberRoot = useRef(0.01);
   const [data2, setData2] = useState([{data: [], color: colors[0]}])
   const [data, setData] = useState([{data: [], color: colors[0]}]);
@@ -33,7 +33,7 @@ const VictoryChartScatter = () => {
             newData = {...newData, data: [dataChild]};
             setData2((cur2) => {
               let newData2 = cur2[numberDir.current];
-              const dataChild2 = {x: numberRoot2.current + dataChild.y, y: dataChild.y/dataChild.x}
+              const dataChild2 = {x: numberRoot2.current + dataChild.y, y: dataChild.y/(dataChild.x - numberRoot2.current)}
               newData2 = {...newData2, data: [dataChild2]};
               return [...cur2.slice(0,numberDir.current), newData2]
             })
@@ -46,15 +46,9 @@ const VictoryChartScatter = () => {
               const {x, y} = dataCur.data[numberRan.current-1];
               const newData = {x : x+0.05, y: y+ 0.08};
               dataCur.data.push(newData);
-              // setData2((cur2) => {
-              //   let newData2 = cur[numberDir.current];
-              //   const dataChild2 = {x: newData.y, y: newData.y/newData.x}
-              //   newData2 = {...newData2, data: [dataChild2]};
-              //   return [...cur2.slice(0,numberDir.current), newData2]
-              // })
               setData2(cur2 => {
                 const dataCur2 = cur2[numberDir.current];
-                const newData2 = {x: numberRoot2.current + newData.y, y: newData.y/newData.x}
+                const newData2 = {x: numberRoot2.current + newData.y, y: newData.y/(newData.x - numberRoot2.current)}
                 dataCur2.data.push(newData2);
                 return [...cur2.slice(0, numberDir.current), dataCur2];
               })
@@ -70,33 +64,13 @@ const VictoryChartScatter = () => {
             dataCur.data.push(newData);
             setData2(cur2 => {
               const dataCur2 = cur2[numberDir.current];
-              const newData2 = {x: numberRoot2.current + newData.y, y: newData.y/newData.x}
+              const newData2 = {x: numberRoot2.current + newData.y, y: newData.y/(newData.x - numberRoot2.current)}
               dataCur2.data.push(newData2);
               return [...cur2.slice(0, numberDir.current), dataCur2];
             })
             return [...cur.slice(0, numberDir.current), dataCur];
           })
         }
-        // else if (numberRan.current <= 60) {
-        //   setData(cur => {
-        //     const dataCur = cur[numberDir.current];
-        //     const {x, y} = dataCur.data[numberRan.current-1];
-        //     const newData = {x : x - 0.1, y: y - 0.4};
-        //     dataCur.data.push(newData);
-        //     return [...cur.slice(0, numberDir.current), dataCur];
-        //   }
-        // )r
-        // }
-        // else if (numberRan.current <= 80) {
-        //   setData(cur => {
-        //     const dataCur = cur[numberDir.current];
-        //     const {x, y} = dataCur.data[numberRan.current-1];
-        //     const newData = {x : x - 0.1, y: y + 0.4};
-        //     dataCur.data.push(newData);
-        //     return [...cur.slice(0, numberDir.current), dataCur];
-        //   }
-        // )
-        // }
         else if (numberRan.current <= 70) {
           setData(cur => {
             const dataCur = cur[numberDir.current];
@@ -105,7 +79,7 @@ const VictoryChartScatter = () => {
             dataCur.data.push(newData);
             setData2(cur2 => {
               const dataCur2 = cur2[numberDir.current];
-              const newData2 = {x: numberRoot2.current + newData.y, y: newData.y/newData.x*5}
+              const newData2 = {x: numberRoot2.current + newData.y, y: newData.y/(newData.x - numberRoot2.current)}
               dataCur2.data.push(newData2);
               return [...cur2.slice(0, numberDir.current), dataCur2];
             })
@@ -114,14 +88,6 @@ const VictoryChartScatter = () => {
         }
 
         ++numberRan.current;
-        // if (numberRan.current >= 80) {
-        // numberRoot.current += 0.5;
-        //   ++numberDir.current;
-        //   numberRan.current = 0;
-        //   setData((cur) => {
-        //     return ([...cur, {data: [], color: colors[numberDir.current%3]}]);
-        //   })
-        // }
 
         if(numberDir.current > 9) {
           console.log(JSON.stringify(data));
@@ -138,12 +104,6 @@ const VictoryChartScatter = () => {
             })
             return ([...cur, {data: [], color: colors[numberDir.current%3]}]);
           })
-          // numberRoot.current = data[numberDir.current].data[numberRan.current-2]["x"] || 0.01;
-          // ++numberDir.current;
-          // numberRan.current = 0;
-          // setData((cur) => {
-          //   return ([...cur, {data: [], color: colors[numberDir.current%3]}]);
-          // })
         }
        }, 300)
     }
@@ -165,7 +125,8 @@ const VictoryChartScatter = () => {
   }, [])
 
   const handleEnd = () => {
-    setRun(false);
+    setRun((cur) => !cur);
+    AlertButton()
   }
 
   return (
@@ -174,8 +135,11 @@ const VictoryChartScatter = () => {
       // style={styles.chart}
           domain={{ x: [0, 7.8], y: [-16, 16] }}
           theme={VictoryTheme.material}
+          
           containerComponent={<VictoryZoomContainer zoomDimension="x" zoomDomain={{x: [0, 7.8]}}/>}
       >
+        {/* <Y miny={-16} maxy={16} step={4} lable="Lít/giây"/>
+        <X minx={0} maxx={7.8} step={0.6} lable="Lít"/> */}
           <VictoryAxis 
               dependentAxis
               tickValues={createTickValues(-16, 16, 4)}
@@ -200,15 +164,12 @@ const VictoryChartScatter = () => {
           />
           {
             data2.map(item => {
-              // console.log(item)
               return (
-                // useMemo((item) => 
                 (<VictoryScatter key={item}
                   style={{ data: { fill: item.color } }}
                   size={2}
                   data={item.data}
               />)
-              // , [item])
               )
             }) 
           }
@@ -220,6 +181,8 @@ const VictoryChartScatter = () => {
           containerComponent={<VictoryZoomContainer zoomDimension="x" zoomDomain={{x: [0, 14]}}/>}
           style={styles.chart}
       >
+         {/* <Y miny={-3.2} maxy={3.2} step={0.8} lable="Lít"/>
+        <X minx={0} maxx={14} step={2} lable="Giây"/> */}
           <VictoryAxis 
               dependentAxis
               tickValues={createTickValues(-3.2, 3.2, 0.8)}
@@ -245,36 +208,24 @@ const VictoryChartScatter = () => {
           {
             data.map(item => {
               return (
-                // useMemo((item) => 
-                // (
                   <VictoryScatter key={item}
                     style={{ data: { fill: item.color } }}
                     size={2}
                     data={item.data}
                   />
-                  // useMemo(() => <VicChart item={item}/>, [item])
-                // )
-                  // ,[item])
               )
             }) 
           }
           
       </VictoryChart>
       <View style={styles.button}>
-          <Button title='Bắt đầu' onPress={handleBegin}/>
-          <Button title='Kết Thúc' onPress={handleEnd}/>
-        </View>
+          <Button title={data[0].data.length < 1? 'Bắt đầu' : 'Bắt đầu lại'} style={styles.btn} onPress={handleBegin}/>
+          {/* <Button title={isRun? 'Tạm dừng': data[0].data.length < 1 ? 'Kết thúc' : 'Tiếp tục'} style={styles.btn}onPress={handleEnd}/> */}
+          <Button title="Kết thúc" onPress={handleEnd}/>
+      </View>
     </View>
   );
 }
-// const datas = [
-//   { x: 0, y: 0 },
-//   { x: 0.2, y: 4 },
-//   { x: 0.4, y: 7.8 },
-//   { x: 0.6, y: 8 },
-//   { x: 0.8, y: 8 },
-
-// ]
 
 const AlertButton = () => {
   Alert.alert(
@@ -294,13 +245,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f5fcff",
-    // marginTop: -30
   },
   chart: {
-    // marginTop: -30,
-    // paddingTop: -30
-    
-  }
+  },
+  button: {
+    flexDirection: "row",
+    justifyContent: "space-around"
+},
+btn: {
+  backgroundColor: "grey",
+  color: 'black'
+}
 });
 
 export default VictoryChartScatter;
